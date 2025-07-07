@@ -1,0 +1,102 @@
+.navbar { 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px;
+    margin-bottom: 0;
+}
+
+.navbar .links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 20px;
+    margin-top: 20px;
+    text-decoration: dashed;
+    text-decoration-color: black;
+}
+
+a {
+    padding: 10px;
+    text-decoration: none;
+    color: rgb(49, 36, 36);
+}
+
+a:hover {
+    color: #ff7f00;
+    border: 2px black solid;
+    border-radius: 10px;
+}
+
+img {
+    width: 80px;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    margin-left: 15px;
+}
+
+.navbar button {
+    color: #ff7f00;
+    background: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.navbar button:hover {
+    
+    color: white;
+}
+.profile-menu-container {
+    position: relative;
+    cursor: pointer;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-menu-container img.profile-image {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+    text-decoration: none;
+    color: #333;
+    background: none;
+    border: none;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    color: #ff7f00;
+}
+.navbar .register-login{
+    margin-bottom: 20px;
+}
+.logo a{
+    border: none !important;
+    cursor: pointer !important;
+}

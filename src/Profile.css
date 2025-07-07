@@ -1,0 +1,50 @@
+.profile {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.profile h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.user-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.user-info p {
+  margin: 20px 0;
+  font-size: 20px;
+}
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 20px;
+  border: 2px solid #ff7f00;
+}
+.upload-button {
+  display: inline-block;
+  padding: 10px 10px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.upload-button:hover {
+  background: #218838;
+}
+.profile img{
+    width: 150px;
+    height: auto;
+}

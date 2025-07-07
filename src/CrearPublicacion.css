@@ -1,0 +1,127 @@
+.create-publication-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+.create-publication-title {
+  font-size: 2.2em;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  text-align: center;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 10px;
+}
+
+.publication-form .form-group {
+  margin-bottom: 20px;
+}
+
+.publication-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #34495e;
+  font-size: 1.05em;
+}
+
+.publication-form input[type="text"],
+.publication-form input[type="number"],
+.publication-form textarea,
+.publication-form select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.publication-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.publication-form input:focus,
+.publication-form textarea:focus,
+.publication-form select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+.image-preview-container {
+  margin-top: 15px;
+  text-align: center;
+  border: 1px dashed #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.image-preview-container p {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.btn-submit-publication {
+  display: block;
+  width: 100%;
+  padding: 15px 25px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.15em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 30px;
+}
+
+.btn-submit-publication:hover {
+  background-color: #229a58;
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+  .create-publication-container {
+    margin: 20px 15px;
+    padding: 20px;
+  }
+
+  .create-publication-title {
+    font-size: 1.8em;
+  }
+
+  .publication-form label {
+    font-size: 1em;
+  }
+
+  .publication-form input[type="text"],
+  .publication-form input[type="number"],
+  .publication-form textarea,
+  .publication-form select {
+    padding: 10px 12px;
+  }
+
+  .btn-submit-publication {
+    font-size: 1.05em;
+    padding: 12px 20px;
+  }
+}
