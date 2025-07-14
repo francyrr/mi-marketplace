@@ -1,12 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProductContext } from '../context/ProductContext';
 import { AuthContext } from '../context/AuthContext';
-import '/src/CrearPublicacion.css';
+import '/src/styles/CrearPublicacion.css';
+import axios from 'axios';
 
 function CrearPublicacion() {
   const navigate = useNavigate();
-  const { addProduct } = useContext(ProductContext); 
   const { user } = useContext(AuthContext);
 
   const [nombre, setNombre] = useState('');
@@ -55,7 +54,7 @@ function CrearPublicacion() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!user) {
@@ -68,23 +67,37 @@ function CrearPublicacion() {
       return;
     }
 
-    const newProductData = {
-      nombre,
-      descripcion,
-      precio: parseFloat(precio),
-      categoria,
-      ubicacion,
-      imagen: imagenPreview,
-      calificacion: 0,
-      vendidos: 0,
-      vendedor: user.name || 'Vendedor Desconocido', 
-      telefonoVendedor: user.phone || 'N/A'
-    };
-    
-    addProduct(newProductData, user.id);
+    try {
+   
+      const formData = new FormData();
+      formData.append('imagen', imagen);
 
-    alert('Producto publicado con éxito!');
-    navigate('/productos');
+      const uploadRes = await axios.post('http://localhost:5000/api/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      const filename = uploadRes.data.filename;
+      const imagePath = `/uploads/${filename}`;
+
+      const newProductData = {
+        nombre,
+        descripcion,
+        precio: parseFloat(precio),
+        categoria,
+        ubicacion,
+        imagen: imagePath,
+        vendedor_id: user.id
+      };
+
+      await axios.post('http://localhost:5000/api/crear-publicacion', newProductData);
+
+      alert('Producto publicado con éxito!');
+      navigate('/productos');
+
+    } catch (error) {
+      console.error("Error al crear publicación:", error);
+      alert('Hubo un error al publicar tu producto.');
+    }
   };
 
   return (
@@ -138,12 +151,12 @@ function CrearPublicacion() {
             required
           >
             <option value="">Selecciona una categoría</option>
-            <option value="electronica">Electrónica</option>
-            <option value="libros">Libros</option>
-            <option value="hogar">Hogar</option>
-            <option value="moda">Moda</option>
-            <option value="deportes">Deportes</option>
-            <option value="otros">Otros</option>
+            <option value="Electrónica">Electrónica</option>
+            <option value="Libros">Libros</option>
+            <option value="Hogar">Hogar</option>
+            <option value="Moda">Moda</option>
+            <option value="Deportes">Deportes</option>
+            <option value="Otros">Otros</option>
           </select>
         </div>
 

@@ -1,16 +1,17 @@
 import React, { useState, useContext } from 'react';
-import { AuthContext } from '../context/AuthContext'; 
+import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import "/src/Login.css";
+import "/src/styles/Login.css";
 
 function Login() {
-  const { login } = useContext(AuthContext); 
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const handleSubmit = async (e) => { 
-    e.preventDefault(); 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setError('');
 
     if (!email || !password) {
@@ -19,14 +20,9 @@ function Login() {
     }
 
     try {
-    
-      await login(email, password); 
-      
-      
+      await login(email, password);
       navigate('/profile');
-
     } catch (err) {
-      
       setError(err.message || 'Error al iniciar sesión. Inténtalo de nuevo.');
       console.error("Error durante el login:", err);
     }
@@ -36,14 +32,14 @@ function Login() {
     <div className='login'>
       <h2>Iniciar sesión</h2>
       <div className="form">
-        <form onSubmit={handleSubmit}> 
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email</label> 
+            <label htmlFor="email">Email</label>
             <input
               type="email"
-              id="email" 
+              id="email"
               placeholder="Ingresa tu Email"
-              value={email} 
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
@@ -53,21 +49,21 @@ function Login() {
               type="password"
               id="password"
               placeholder="Ingresa tu contraseña"
-              value={password} 
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          
+
           {error && <p className="error-message">{error}</p>}
-         
-          <button type="submit"> 
+
+          <button type="submit">
             Entrar
           </button>
-          
+
         </form>
-      
+
         <p className="register-link">
-          ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
+          ¿No tienes cuenta? <a href="/registro">Regístrate aquí</a>
         </p>
 
       </div>

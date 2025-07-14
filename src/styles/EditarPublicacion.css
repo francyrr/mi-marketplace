@@ -1,0 +1,127 @@
+.edit-publication-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+.edit-publication-title {
+  font-size: 2.2em;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  text-align: center;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 10px;
+}
+
+.edit-publication-form .form-group {
+  margin-bottom: 20px;
+}
+
+.edit-publication-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #34495e;
+  font-size: 1.05em;
+}
+
+.edit-publication-form input[type="text"],
+.edit-publication-form input[type="number"],
+.edit-publication-form textarea,
+.edit-publication-form select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.edit-publication-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.edit-publication-form input:focus,
+.edit-publication-form textarea:focus,
+.edit-publication-form select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+.edit-image-preview-container {
+  margin-top: 15px;
+  text-align: center;
+  border: 1px dashed #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+}
+
+.edit-image-preview {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.edit-image-preview-container p {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.btn-submit-edit-publication {
+  display: block;
+  width: 100%;
+  padding: 15px 25px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.15em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 30px;
+}
+
+.btn-submit-edit-publication:hover {
+  background-color: #229a58;
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+  .edit-publication-container {
+    margin: 20px 15px;
+    padding: 20px;
+  }
+
+  .edit-publication-title {
+    font-size: 1.8em;
+  }
+
+  .edit-publication-form label {
+    font-size: 1em;
+  }
+
+  .edit-publication-form input[type="text"],
+  .edit-publication-form input[type="number"],
+  .edit-publication-form textarea,
+  .edit-publication-form select {
+    padding: 10px 12px;
+  }
+
+  .btn-submit-edit-publication {
+    font-size: 1.05em;
+    padding: 12px 20px;
+  }
+}

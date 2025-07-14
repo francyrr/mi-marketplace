@@ -1,14 +1,13 @@
-import "/src/DashboardMenu.css";
+import { Link } from 'react-router-dom';
+import "/src/styles/DashboardMenu.css";
 
 function DashboardMenu() {
-
   return (
     <div className="dashboard-menu">
-      <a href="/crear-publicacion">Vender producto</a> |
-      <a href="/favoritos">Mis favoritos</a> |
-      <a href="/publicaciones">Mis publicaciones</a> |
-      <a href="/productos">Ver Productos</a> 
-      
+      <Link to="/crear-publicacion">Vender producto</Link> |
+      <Link to="/mis-favoritos">Mis favoritos</Link> |
+      <Link to="/mis-publicaciones">Mis publicaciones</Link> |
+      <Link to="/productos">Ver Productos</Link>
     </div>
   );
 }

@@ -1,24 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { productosDemo } from '../data/productos.js';
-import ProductoCard from '../components/ProductoCard.jsx';
-import '/src/Productos.css';
+import React, { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import ProductoCard from '../components/ProductoCard';
+import '/src/styles/Productos.css';
+import { AuthContext } from '../context/AuthContext';
+
 
 function MisFavoritos() {
+  const { user } = useContext(AuthContext);
   const [misFavoritos, setMisFavoritos] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMisFavoritos = () => {
+    if (!user) return;
+
+    const fetchMisFavoritos = async () => {
       setLoading(true);
-      const favoritosDelUsuario = productosDemo.filter(
-        (producto) => producto.esFavorito === true
-      );
-      setMisFavoritos(favoritosDelUsuario);
+      try {
+        const response = await axios.get('http://localhost:5000/api/mis-favoritos', {
+          params: { user_id: user.id }
+        });
+        setMisFavoritos(response.data);
+      } catch (err) {
+        console.error("Error al cargar favoritos:", err);
+      }
       setLoading(false);
     };
 
     fetchMisFavoritos();
-  }, []);
+  }, [user]);
 
   if (loading) {
     return (
@@ -34,8 +43,8 @@ function MisFavoritos() {
       <h1>Mis Productos Favoritos</h1>
       <section className="section-productos">
         {misFavoritos.length > 0 ? (
-          <div className="productos-grid"> 
-            {misFavoritos.map((producto) => (
+          <div className="productos-grid">
+            {misFavoritos.map(producto => (
               <ProductoCard key={producto.id} producto={producto} />
             ))}
           </div>

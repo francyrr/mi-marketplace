@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import "/src/Register.css";
+import "/src/styles/Register.css";
 
 function Register() {
   const navigate = useNavigate();
-  const { register, login } = useContext(AuthContext); 
+  const { register } = useContext(AuthContext); 
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -41,13 +41,9 @@ function Register() {
     }
 
     try {
-      
-      const registeredUser = await register({ name, email, phone, password });
+      await register({ name, email, phone, password });
       setSuccessMessage('¡Registro exitoso! Redirigiendo...');
-      setTimeout(() => {
-        navigate('/profile'); 
-      }, 1500);
-
+      navigate('/profile');
     } catch (err) {
       setError(err.message || 'Error al registrar usuario. Inténtalo de nuevo.');
       console.error("Error durante el registro:", err);
@@ -61,23 +57,53 @@ function Register() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Nombre</label>
-            <input type="text" id="name" placeholder="Ingresa tu nombre" value={name} onChange={(e) => setName(e.target.value)} />
+            <input
+              type="text"
+              id="name"
+              placeholder="Ingresa tu nombre"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" placeholder="Ingresa tu email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input
+              type="email"
+              id="email"
+              placeholder="Ingresa tu email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div className="form-group">
             <label htmlFor="phone">Teléfono</label>
-            <input type="tel" id="phone" placeholder="Ingresa tu teléfono" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <input
+              type="tel"
+              id="phone"
+              placeholder="Ingresa tu teléfono"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
           </div>
           <div className="form-group">
             <label htmlFor="password">Contraseña</label>
-            <input type="password" id="password" placeholder="Crea una contraseña" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input
+              type="password"
+              id="password"
+              placeholder="Crea una contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
           <div className="form-group">
             <label htmlFor="confirmPassword">Confirmar Contraseña</label>
-            <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <input
+              type="password"
+              id="confirmPassword"
+              placeholder="Repite tu contraseña"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
           </div>
 
           {error && <p className="error-message">{error}</p>}

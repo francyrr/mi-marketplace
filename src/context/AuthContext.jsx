@@ -1,64 +1,176 @@
-import { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [registeredUsers, setRegisteredUsers] = useState([]);
+  const [favoritos, setFavoritos] = useState([]);
 
-  useEffect(() => {
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      setUser(JSON.parse(userData));
+  
+  const setAuthToken = (tokenValue) => {
+    if (tokenValue) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${tokenValue}`;
+      localStorage.setItem('token', tokenValue);
+    } else {
+      delete axios.defaults.headers.common['Authorization'];
+      localStorage.removeItem('token');
     }
-
-    const storedRegisteredUsers = localStorage.getItem('registeredUsers');
-    if (storedRegisteredUsers) {
-      setRegisteredUsers(JSON.parse(storedRegisteredUsers));
+  };
+ 
+  const normalizeUser = (userData) => {
+    if (!userData) return null;
+    const normalized = { ...userData };
+    if (normalized.profile_image && !normalized.profileImage) {
+      normalized.profileImage = normalized.profile_image;
+     
     }
-
-    setLoading(false);
-  }, []);
-  const register = (userData) => {
-    const newUserId = registeredUsers.length > 0 ? Math.max(...registeredUsers.map(u => u.id)) + 1 : 1;
-    const newUser = { ...userData, id: newUserId };
-
-    if (registeredUsers.some(u => u.email === newUser.email)) {
-      throw new Error('El email ya está registrado.');
-    }
-
-    const updatedUsers = [...registeredUsers, newUser];
-    setRegisteredUsers(updatedUsers);
-    localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers)); // Guardar en localStorage
-    console.log("Usuario registrado y guardado:", newUser);
-    return newUser;
+    return normalized;
   };
 
-  const login = (email, password) => {
-    const foundUser = registeredUsers.find(
-      u => u.email === email && u.password === password
-    );
+  
+  useEffect(() => {
+    const loadInitialData = async () => {
+      const storedToken = localStorage.getItem('token');
+      if (storedToken) {
+        setAuthToken(storedToken);
+        try {
+        
+          const res = await axios.get(`http://localhost:5000/api/profile`);
+          
+          setUser(normalizeUser(res.data.usuario)); 
 
-    if (foundUser) {
-      setUser(foundUser);
-      localStorage.setItem('user', JSON.stringify(foundUser));
-      console.log("Usuario logueado:", foundUser);
-      return foundUser;
+          
+          const resFavoritos = await axios.get(`http://localhost:5000/api/mis-favoritos`);
+          setFavoritos(resFavoritos.data);
+
+        } catch (error) {
+          console.error("Error al cargar token o usuario de localStorage / cargar favoritos:", error);
+          logout(); 
+        }
+      }
+      setLoading(false); 
+    };
+
+    loadInitialData();
+  }, []); 
+
+  useEffect(() => {
+    if (user) {
+      
+      localStorage.setItem('user', JSON.stringify(user)); 
+      
+      
+      axios.get(`http://localhost:5000/api/mis-favoritos`)
+        .then(res => {
+          setFavoritos(res.data);
+        })
+        .catch(err => {
+          console.error("Error al cargar favoritos desde backend (después de login):", err);
+          if (err.response && err.response.status === 401) {
+            logout(); 
+          }
+        });
     } else {
-      throw new Error('Credenciales incorrectas.');
+      localStorage.removeItem('user');
+      setFavoritos([]);
+    }
+  }, [user]); 
+
+  const login = async (email, password) => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/login", { email, password });
+      const { token, usuario } = res.data;
+      setAuthToken(token);
+      setUser(normalizeUser(usuario)); 
+      return true;
+    } catch (error) {
+      console.error("Error durante el login en AuthContext:", error.response?.data?.message || error.message);
+      throw new Error(error.response?.data?.message || "Error al iniciar sesión");
+    }
+  };
+
+  const register = async ({ name, email, phone, password }) => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/registro", {
+        name, email, phone, password
+      });
+      const { token, usuario } = res.data;
+      setAuthToken(token);
+      setUser(normalizeUser(usuario));
+      return usuario;
+    } catch (error) {
+      console.error("Error durante el registro en AuthContext:", error.response?.data?.message || error.message);
+      throw new Error(error.response?.data?.message || "Error al registrar usuario");
     }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user'); 
-    console.log("Sesión cerrada y datos eliminados de localStorage.");
+    setFavoritos([]);
+    localStorage.removeItem('user');
+    setAuthToken(null);
   };
 
+  const addFavorito = async (producto) => {
+    if (!user) {
+      throw new Error('Debes iniciar sesión para agregar favoritos.');
+    }
+    try {
+      
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No token found.'); 
+      
+      await axios.post('http://localhost:5000/api/favoritos', { product_id: producto.id });
+      setFavoritos((prev) => {
+        
+        if (prev.some((p) => p.id === producto.id)) return prev;
+        return [...prev, producto];
+      });
+    } catch (err) {
+      console.error("Error al añadir favorito:", err);
+      throw new Error(err.response?.data?.error || 'No se pudo agregar favorito.');
+    }
+  };
+
+  const removeFavorito = async (productoId) => {
+    if (!user) {
+      throw new Error('Debes iniciar sesión para eliminar favoritos.');
+    }
+    try {
+      
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No token found.');
+
+      await axios.delete(`http://localhost:5000/api/favoritos/${productoId}`);
+      setFavoritos((prev) => prev.filter((p) => p.id !== productoId));
+    } catch (err) {
+      console.error("Error al eliminar favorito:", err);
+      throw new Error(err.response?.data?.error || 'No se pudo eliminar favorito.');
+    }
+  };
+
+  
+  const updateUserProfile = (updatedUserData) => {
+    setUser(normalizeUser(updatedUserData)); 
+    
+  };
+
+
   return (
-    <AuthContext.Provider value={{ user, setUser, register, login, logout, loading }}>
-      {children}
+    <AuthContext.Provider value={{
+      user,
+      loading,
+      favoritos,
+      addFavorito,
+      removeFavorito,
+      login,
+      logout,
+      register,
+      updateUserProfile 
+    }}>
+      {!loading && children} 
     </AuthContext.Provider>
   );
 }

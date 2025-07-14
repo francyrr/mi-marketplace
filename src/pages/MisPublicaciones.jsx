@@ -1,24 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { productosDemo } from '../data/productos.js';
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 import ProductoCard from '../components/ProductoCard.jsx'; 
-import '/src/Productos.css'; 
+import '/src/styles/Productos.css'; 
 
 function MisPublicaciones() {
+  const { user } = useContext(AuthContext);
   const [misProductos, setMisProductos] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchMisPublicaciones = () => {
+    const fetchMisPublicaciones = async () => {
+      if (!user) return; 
       setLoading(true);
-      const publicacionesDelVendedor = productosDemo.filter(
-        (producto) => producto.esMiPublicacion === true
-      );
-      setMisProductos(publicacionesDelVendedor);
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/mis-publicaciones?usuario_id=${user.id}`
+        );
+        setMisProductos(response.data);
+      } catch (error) {
+        console.error("Error al cargar tus publicaciones:", error);
+      }
       setLoading(false);
     };
 
     fetchMisPublicaciones();
-  }, []);
+  }, [user]);
 
   if (loading) {
     return (

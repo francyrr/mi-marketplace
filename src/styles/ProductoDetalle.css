@@ -197,6 +197,23 @@
   font-size: 0.9em;
   color: #7f8c8d;
 }
+.btn-edit{
+  margin: 20px;
+  background-color: #25d366;
+  color: white;
+}
+.btn-edit:hover{
+  background-color: #1da851;
+  transform: translateY(-2px);
+}
+.btn-delete{
+ background-color: red;
+  color: white;
+}
+.btn-delete:hover{
+   background-color: #d10b0b;
+  transform: translateY(-2px);
+}
 
 @media (max-width: 768px) {
   .product-detail-container {
