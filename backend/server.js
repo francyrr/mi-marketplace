@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import routes from './routes.js';
 
+
 const app = express();
 
 const uploadsDir = path.resolve('uploads');
@@ -38,3 +39,4 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Servidor en http://localhost:${PORT}`));
+export default app;
