@@ -1,12 +1,9 @@
-// backend/seed.js
-
 import pool from './config/db.js';
 import bcrypt from 'bcryptjs'; 
 import dotenv from 'dotenv';
 import path from 'path';
 
 dotenv.config({ path: path.resolve(process.cwd(), 'backend', '.env') });
-
 
 const productosIniciales = [
     {
@@ -132,14 +129,12 @@ async function seedDatabase() {
     try {
         client = await pool.connect();
         await client.query('BEGIN'); 
-
-        // 1. Limpiar tablas 
+ 
         console.log('Limpiando tablas "product" y "user"...');
         await client.query('DELETE FROM product'); 
         await client.query('DELETE FROM "user"'); 
         console.log('Tablas limpiadas.');
 
-        // 2. Insertar Usuarios
         const insertedUsers = {};
         for (const user of usuariosIniciales) {
             const hashedPassword = await bcrypt.hash(user.password, 10);
@@ -151,7 +146,6 @@ async function seedDatabase() {
             console.log(`Usuario '${result.rows[0].name}' insertado con ID: ${result.rows[0].id}`);
         }
 
-        // 3. Insertar Productos
         for (const product of productosIniciales) {
             const vendedorId = insertedUsers[product.vendedorNombre];
             if (!vendedorId) {
