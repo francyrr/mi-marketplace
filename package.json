@@ -9,7 +9,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "seed": "node --experimental-vm-modules backend/seed.js"
+    "seed": "node --experimental-vm-modules backend/seed.js",
+    "seed:test": "cross-env NODE_ENV=test node --experimental-vm-modules backend/seed.js"
   },
   "dependencies": {
     "axios": "^1.10.0",
