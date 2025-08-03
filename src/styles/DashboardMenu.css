@@ -13,6 +13,7 @@
   top: var(--header-height, 0px);
   align-self: flex-start;
   z-index: 100;
+  flex: 1;
 }
 
 .menu-header {

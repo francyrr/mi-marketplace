@@ -27,7 +27,9 @@ const Footer = () => {
        
       </div>
        <p className="footer">
-          © 2025 - Mi Marketplace - Todos los derechos reservados
+          © 2025 - Mi Marketplace 
+          <br />
+           Todos los derechos reservados
         </p>
     </div>
   );

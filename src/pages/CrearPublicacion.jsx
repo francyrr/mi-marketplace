@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import DashboardMenu from '../components/DashboardMenu';
 import '/src/styles/CrearPublicacion.css';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL; // ✅ Usar variable de entorno
+const API_URL = import.meta.env.VITE_API_URL; 
 
 function CrearPublicacion() {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ function CrearPublicacion() {
     }
 
     try {
-      // ✅ Subir imagen al backend usando API_URL
+      //  Subir imagen al backend usando API_URL
       const formData = new FormData();
       formData.append('imagen', imagen);
 
@@ -81,7 +82,7 @@ function CrearPublicacion() {
       const filename = uploadRes.data.filename;
       const imagePath = `/uploads/${filename}`;
 
-      // ✅ Crear producto con datos y URL de imagen
+      //  Crear producto con datos y URL de imagen
       const newProductData = {
         nombre,
         descripcion,
@@ -103,99 +104,104 @@ function CrearPublicacion() {
   };
 
   return (
-    <div className="create-publication-container">
-      <h1 className="create-publication-title">Vender un Producto</h1>
-      <form onSubmit={handleSubmit} className="publication-form">
-        <div className="form-group">
-          <label htmlFor="nombre">Nombre del Producto:</label>
-          <input
-            type="text"
-            id="nombre"
-            name="nombre"
-            value={nombre}
-            onChange={handleChange}
-            required
-          />
-        </div>
+    <div className="profile-container">
+      <div className="dashboard-layout">
+        <DashboardMenu /> 
+      </div>
+      <div className="profile-content">
+        <h1 className="create-publication-title">Vender un Producto</h1>
+        <form onSubmit={handleSubmit} className="publication-form">
+          <div className="form-group">
+            <label htmlFor="nombre">Nombre del Producto:</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              value={nombre}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="descripcion">Descripción:</label>
-          <textarea
-            id="descripcion"
-            name="descripcion"
-            value={descripcion}
-            onChange={handleChange}
-            rows="5"
-            required
-          ></textarea>
-        </div>
+          <div className="form-group">
+            <label htmlFor="descripcion">Descripción:</label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              value={descripcion}
+              onChange={handleChange}
+              rows="5"
+              required
+            ></textarea>
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="precio">Precio ($):</label>
-          <input
-            type="number"
-            min="1"
-            id="precio"
-            name="precio"
-            value={precio}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="precio">Precio ($):</label>
+            <input
+              type="number"
+              min="1"
+              id="precio"
+              name="precio"
+              value={precio}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="categoria">Categoría:</label>
-          <select
-            id="categoria"
-            name="categoria"
-            value={categoria}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Selecciona una categoría</option>
-            <option value="Electrónica">Electrónica</option>
-            <option value="Libros">Libros</option>
-            <option value="Hogar">Hogar</option>
-            <option value="Moda">Moda</option>
-            <option value="Deportes">Deportes</option>
-            <option value="Otros">Otros</option>
-          </select>
-        </div>
+          <div className="form-group">
+            <label htmlFor="categoria">Categoría:</label>
+            <select
+              id="categoria"
+              name="categoria"
+              value={categoria}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Selecciona una categoría</option>
+              <option value="Electrónica">Electrónica</option>
+              <option value="Libros">Libros</option>
+              <option value="Hogar">Hogar</option>
+              <option value="Moda">Moda</option>
+              <option value="Deportes">Deportes</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="ubicacion">Ubicación (Ciudad):</label>
-          <input
-            type="text"
-            id="ubicacion"
-            name="ubicacion"
-            value={ubicacion}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="ubicacion">Ubicación (Ciudad):</label>
+            <input
+              type="text"
+              id="ubicacion"
+              name="ubicacion"
+              value={ubicacion}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="imagen">Imagen del Producto:</label>
-          <input
-            type="file"
-            id="imagen"
-            name="imagen"
-            accept="image/*"
-            onChange={handleImageChange}
-            required
-          />
-          {imagenPreview && (
-            <div className="image-preview-container">
-              <img src={imagenPreview} alt="Vista previa" className="image-preview" />
-              <p>Vista previa de la imagen</p>
-            </div>
-          )}
-        </div>
+          <div className="form-group">
+            <label htmlFor="imagen">Imagen del Producto:</label>
+            <input
+              type="file"
+              id="imagen"
+              name="imagen"
+              accept="image/*"
+              onChange={handleImageChange}
+              required
+            />
+            {imagenPreview && (
+              <div className="image-preview-container">
+                <img src={imagenPreview} alt="Vista previa" className="image-preview" />
+                <p>Vista previa de la imagen</p>
+              </div>
+            )}
+          </div>
 
-        <button type="submit" className="btn-submit-publication">
-          Listo para Vender
-        </button>
-      </form>
+          <button type="submit" className="btn-submit-publication">
+            Listo para Vender
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

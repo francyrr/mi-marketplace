@@ -131,18 +131,19 @@ function Profile() {
   };
 
   const getProfileImageUrl = () => {
-    if (previewUrl) return previewUrl;
+  if (previewUrl) return previewUrl;
 
-    if (user?.profileImage?.startsWith("/uploads")) {
-      // ✅ Construir URL con el backend en producción
-      return `${API_URL.replace("/api", "")}${user.profileImage}`;
-    }
+  if (user?.profileImage?.startsWith("/uploads")) {
+    //  Devuelve la ruta absoluta basada en el backend (sin /api)
+    const backendBase = API_URL.replace("/api", ""); 
+    return `${backendBase}${user.profileImage}`;
+  }
 
-    return "/assets/perfil.jpg"; // ✅ En public/assets
-  };
+  return "/assets/perfil.jpg";
+};
 
   if (loading && !user)
-    return <div className="profile-container">Cargando perfil...</div>;
+    return <div className="profile-container-perfil">Cargando perfil...</div>;
   if (!user && !loading)
     return (
       <div className="profile-container error-message">
@@ -151,11 +152,11 @@ function Profile() {
     );
 
   return (
-    <div className="profile-container">
+    <div className="profile-container-perfil">
       <div className="dashboard-layout">
         <DashboardMenu />
       </div>
-      <div className="profile-content">
+      <div className="profile-content-perfil">
         <h1>Bienvenido</h1>
         <div className="user-info">
           <img

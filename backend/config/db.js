@@ -6,7 +6,7 @@ import path from 'path';
 if (process.env.NODE_ENV !== 'production') {
   const envPath = process.env.NODE_ENV === 'test'
     ? path.resolve('backend', '.env.test')
-    : path.resolve('.env');
+    : path.resolve('backend','.env');
 
   const result = dotenv.config({ path: envPath });
 

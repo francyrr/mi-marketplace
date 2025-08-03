@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 export const AuthContext = createContext();
-
+console.log("API_URL:", import.meta.env.VITE_API_URL);
 const API_URL = import.meta.env.VITE_API_URL; // ✅ URL del backend desde variable de entorno
 
 export function AuthProvider({ children }) {

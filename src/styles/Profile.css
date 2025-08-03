@@ -101,13 +101,15 @@ input.input-section[type="file"]::file-selector-button {
 input.input-section[type="file"]::file-selector-button:hover {
   background-color: #27ae60;
 }
-.profile-container{
+.profile-container-perfil{
   display: flex;
   flex-direction: row;
   align-items: start;
   justify-content: flex-start;
-  padding: 10px;
+  padding: 0px;
   gap: 350px;
+  margin: 0 auto;
+  
  
 }
 .dashboard-layout{
@@ -138,8 +140,48 @@ display: inline-block;
   font-size: 15px;
   margin-top: 85px;
 }
-.profile-content h1{
+.profile-content-perfil h1{
  text-align: center;
  font-size: 55px;
+ color: #555;
+ margin: 0;
+ padding: 5px;
 }
-  
+
+@media (max-width: 1024px) {
+  .profile-container-perfil {
+    gap: 150px;
+  }
+}
+
+/* Para móviles (responsivo) */
+@media (max-width: 768px) {
+  .profile-container-perfil {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; 
+    padding: 10px;
+  }
+
+  .dashboard-layout {
+    width: 100%; 
+  }
+
+  .profile-content {
+    width: 100%; 
+    text-align: center;
+  }
+
+  .profile-content h1 {
+    font-size: 35px;
+  }
+
+  .profile-avatar {
+    width: 120px; 
+    margin-bottom: 15px;
+  }
+
+  .upload-button-editar {
+    margin-top: 20px; 
+  }
+}

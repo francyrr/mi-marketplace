@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import ProductoCard from '../components/ProductoCard.jsx'; 
-import '/src/styles/Productos.css'; 
+import ProductoCard from '../components/ProductoCard.jsx';
+import DashboardMenu from '../components/DashboardMenu'; 
+import '/src/styles/Productos.css';
 
-const API_URL = import.meta.env.VITE_API_URL; // ✅ Variable de entorno para el backend
+const API_URL = import.meta.env.VITE_API_URL; 
 
 function MisPublicaciones() {
   const { user } = useContext(AuthContext);
@@ -13,10 +14,10 @@ function MisPublicaciones() {
 
   useEffect(() => {
     const fetchMisPublicaciones = async () => {
-      if (!user) return; 
+      if (!user) return;
       setLoading(true);
       try {
-        // ✅ Uso de API_URL
+        //  Uso de API_URL
         const response = await axios.get(
           `${API_URL}/mis-publicaciones?usuario_id=${user.id}`
         );
@@ -32,29 +33,39 @@ function MisPublicaciones() {
 
   if (loading) {
     return (
-      <div className="productos-page">
-        <h1>Mis Publicaciones</h1>
-        <p className="loading-message">Cargando tus publicaciones...</p>
+      <div className="profile-container">
+        <div className="dashboard-layout">
+          <DashboardMenu />
+        </div>
+        <div className="profile-content">
+          <h1>Mis Publicaciones</h1>
+          <p className="loading-message">Cargando tus publicaciones...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="productos-page"> 
-      <h1>Mis Publicaciones</h1>
-      <section className="section-productos">
-        {misProductos.length > 0 ? (
-          <div className="productos-grid"> 
-            {misProductos.map((producto) => (
-              <ProductoCard key={producto.id} producto={producto} />
-            ))}
-          </div>
-        ) : (
-          <p className="no-items-message">
-            Aún no has publicado ningún producto.
-          </p>
-        )}
-      </section>
+    <div className="profile-container">
+      <div className="dashboard-layout">
+        <DashboardMenu />
+      </div>
+      <div className="profile-content">
+        <h1>Mis Publicaciones</h1>
+        <section className="section-productos">
+          {misProductos.length > 0 ? (
+            <div className="productos-grid">
+              {misProductos.map((producto) => (
+                <ProductoCard key={producto.id} producto={producto} />
+              ))}
+            </div>
+          ) : (
+            <p className="no-items-message">
+              Aún no has publicado ningún producto.
+            </p>
+          )}
+        </section>
+      </div>
     </div>
   );
 }

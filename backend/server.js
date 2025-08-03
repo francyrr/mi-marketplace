@@ -38,7 +38,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ✅ Rutas API
-app.use('/', routes);
+app.use('/api', routes);
 
 // Middleware de errores
 app.use((err, req, res, next) => {
