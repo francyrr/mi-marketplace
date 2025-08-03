@@ -114,8 +114,7 @@ router.get('/productos/:id', protect, async (req, res) => {
 // Ruta para crear una nueva publicación (producto)
 router.post('/crear-publicacion', protect, async (req, res) => {
     const { nombre, descripcion, precio, imagen, categoria, ubicacion, lat, lng } = req.body;
-    const vendedor_id = req.user.id; // El ID del usuario que está publicando
-
+    const vendedor_id = req.user.id; 
     try {
         const result = await pool.query(
             `INSERT INTO product (nombre, descripcion, precio, imagen, categoria, ubicacion, vendedor_id, lat, lng)

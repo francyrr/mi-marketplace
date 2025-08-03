@@ -79,7 +79,7 @@
   color: #555;
 }
 
-.btn-submit-edit-publication {
+.submit-button {
   display: block;
   width: 100%;
   padding: 15px 25px;
@@ -98,6 +98,7 @@
   background-color: #229a58;
   transform: translateY(-3px);
 }
+
 
 @media (max-width: 768px) {
   .edit-publication-container {

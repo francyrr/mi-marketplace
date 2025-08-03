@@ -1,12 +1,31 @@
 .footer-div{
-background-color: #ca640c;
-
+background-color: #F28C28;
+ padding: 20px;
+  display: flex;
+  flex-direction: column;
+   justify-content: center;
 }
 .footer{
     text-align: center;
     margin: auto;
     padding: 20px;
+    font-size: 20px;
+    color: white;    
 }
-h2{
-    text-align: center;
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  
+  
+}
+.social-icon{
+    color: white;
+}
+.social-icons a:hover{
+    border: none;
+    
+}
+.social-icon:hover{
+    color: black;
 }

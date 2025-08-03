@@ -4,17 +4,20 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon backend/server.js",
-    "test": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "seed": "node --experimental-vm-modules backend/seed.js",
-    "seed:test": "cross-env NODE_ENV=test node --experimental-vm-modules backend/seed.js"
+    "dev:back": "nodemon backend/server.js",            
+  "dev:front": "vite",                                 
+  "start": "node backend/server.js",                   
+  "build": "vite build",                               
+  "preview": "vite preview",                           
+  "test": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+  "lint": "eslint .",
+  "seed": "node --experimental-vm-modules backend/seed.js",
+  "seed:test": "cross-env NODE_ENV=test node --experimental-vm-modules backend/seed.js"
   },
   "dependencies": {
     "axios": "^1.10.0",
     "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.7.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
@@ -25,6 +28,7 @@
     "pg": "^8.16.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.3"
   },
   "devDependencies": {

@@ -27,3 +27,9 @@ main {
   text-align: center;
   margin: 150px;
 }
+.loading-message{
+  text-align: center;
+  margin: 150px;
+  font-size: 24px;
+  
+}
