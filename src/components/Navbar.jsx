@@ -3,7 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import "/src/styles/Navbar.css";
 
-const API_URL = import.meta.env.VITE_API_URL; // ✅ Usar la variable de entorno
+const API_URL = import.meta.env.VITE_API_URL; 
 
 function Navbar() {
   const { user, logout } = useContext(AuthContext);
@@ -19,7 +19,7 @@ function Navbar() {
     setMenuOpen(!menuOpen);
   };
 
-  // ✅ Construcción dinámica de la URL de imagen de perfil
+  //  Construcción dinámica de la URL de imagen de perfil
   const getProfileImageUrl = () => {
     if (user?.profileImage?.startsWith('/uploads')) {
       // Remover "/api" de la URL de backend si existe
@@ -33,7 +33,6 @@ function Navbar() {
     <nav className='navbar'>
       <div className='logo'>
         <Link to="/">
-          {/* ✅ El logo debe ir como "/assets/logo.png" (en public), no "/public/assets" */}
           <img src="/assets/logo.png" alt="Logo" />
         </Link>
       </div>

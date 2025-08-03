@@ -3,10 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import "/src/styles/ProductoDetalle.css";
 import genericMapImage from "/assets/img/mapa.jpg";
-import axios from "axios";
-
+import axios from "axios"; 
 const DEFAULT_MAP_IMAGE = genericMapImage;
-const API_URL = import.meta.env.VITE_API_URL; // ✅ URL base de la API desde variable de entorno
+const API_URL = import.meta.env.VITE_API_URL; 
 
 function ProductoDetalle() {
   const { id } = useParams();
@@ -21,8 +20,8 @@ function ProductoDetalle() {
     const fetchProducto = async () => {
       try {
         setLoading(true);
-        // ✅ Uso de API_URL para la petición
-        const response = await axios.get(`${API_URL}/productos/${id}`);
+        //  Uso de API_URL para la petición (correcto)
+        const response = await axios.get(`${API_URL}/api/productos/${id}`);
         setProducto(response.data);
       } catch (err) {
         console.error("Error fetching product:", err);
@@ -40,9 +39,10 @@ function ProductoDetalle() {
       const mensaje = encodeURIComponent(
         `¡Hola! Estoy interesado/a en tu producto: "${producto.nombre}". ¿Está disponible?`
       );
+      
       const formattedPhone = producto.telefono_vendedor.startsWith("+")
         ? producto.telefono_vendedor
-        : `+56${producto.telefono_vendedor}`;
+        : `+56${producto.telefono_vendedor}`; // Asegura el formato internacional
       window.open(`https://wa.me/${formattedPhone}?text=${mensaje}`, "_blank");
     } else {
       alert("Número de contacto no disponible.");
@@ -56,8 +56,8 @@ function ProductoDetalle() {
   const handleDelete = async () => {
     if (confirm("¿Seguro que deseas eliminar esta publicación?")) {
       try {
-        // ✅ Uso de API_URL para eliminar publicación
-        await axios.delete(`${API_URL}/eliminar-publicacion/${producto.id}`);
+        // Uso de API_URL para eliminar publicación (correcto)
+        await axios.delete(`${API_URL}/api/eliminar-publicacion/${producto.id}`);
         alert("Publicación eliminada.");
         navigate("/mis-publicaciones");
       } catch (err) {
@@ -67,6 +67,7 @@ function ProductoDetalle() {
     }
   };
 
+  // Lógica de Google Maps y uso de `producto.lat`, `producto.lng`
   const getGoogleMapsLink = (lat, lng, query) => {
     if (lat && lng) {
       return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
@@ -83,16 +84,17 @@ function ProductoDetalle() {
   if (!producto)
     return <div className="product-detail-container no-product-message">Producto no disponible.</div>;
 
+  // Pasar `producto.lat` y `producto.lng` directamente
   const mapLink = getGoogleMapsLink(
-    producto.coordenadas?.lat,
-    producto.coordenadas?.lng,
+    producto.lat,
+    producto.lng,
     producto.ubicacion
   );
 
-  // ✅ Ajustar URL de la imagen para producción/desarrollo
-  const imageUrl = producto.imagen?.startsWith("/uploads")
-    ? `${API_URL.replace("/api", "")}${producto.imagen}`
-    : producto.imagen || "/assets/default-placeholder.jpg";
+  // Ajustar URL de la imagen para producción/desarrollo (simplificado)
+  const imageUrl = producto.imagen
+    ? `${API_URL}${producto.imagen}`
+    : "/assets/default-placeholder.jpg"; // Placeholder si no hay imagen
 
   return (
     <div className="product-detail-container">
@@ -142,7 +144,7 @@ function ProductoDetalle() {
                 className="map-link-preview"
               >
                 <img
-                  src={DEFAULT_MAP_IMAGE}
+                  src={DEFAULT_MAP_IMAGE} 
                   alt={`Ubicación de ${producto.nombre}`}
                   className="map-preview-image"
                 />

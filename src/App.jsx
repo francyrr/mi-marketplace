@@ -25,14 +25,14 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Register />} />
-            
+            <Route path="/productos" element={<Productos />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/profile" element={<Profile />} />
               <Route path="/mis-favoritos" element={<Favoritos />} />
               <Route path="/mis-publicaciones" element={<MisPublicaciones />} />
               <Route path="/crear-publicacion" element={<CrearProducto />} />
               <Route path="/editar-publicacion/:id" element={<EditarPublicacion />} />
-              <Route path="/productos" element={<Productos />} />
+              
             <Route path="/producto/:id" element={<ProductoDetalle />} />
             </Route>
           </Routes>

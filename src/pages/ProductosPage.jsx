@@ -5,7 +5,7 @@ import ProductoCard from "../components/ProductoCard.jsx";
 import { AuthContext } from '../context/AuthContext';
 import { useContext } from 'react';
 
-const API_URL = import.meta.env.VITE_API_URL; // ✅ URL base desde variable de entorno
+const API_URL = import.meta.env.VITE_API_URL; 
 
 function ProductosPage() {
   const { user, favoritos, addFavorito, removeFavorito } = useContext(AuthContext);
@@ -19,8 +19,8 @@ function ProductosPage() {
     setLoading(true);
     setError('');
     try {
-      // ✅ Petición usando API_URL
-      const res = await axios.get(`${API_URL}/productos`);
+      //  Petición usando API_URL
+      const res = await axios.get(`${API_URL}/api/productos`);
       setProductos(res.data);
       console.log("Productos desde backend:", res.data);
     } catch (err) {

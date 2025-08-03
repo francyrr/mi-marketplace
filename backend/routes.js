@@ -59,7 +59,7 @@ router.get('/mis-publicaciones', protect, getMisPublicaciones);
 
 // --- Rutas para PRODUCTOS ---
 // Obtener todos los productos
-router.get('/productos', protect, async (req, res) => {
+router.get('/productos', async (req, res) => {
     try {
         const result = await pool.query(
             `SELECT id, nombre, descripcion, precio, imagen, categoria, ubicacion, vendedor_id, calificacion, vendidos, created_at, lat, lng

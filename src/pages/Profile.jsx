@@ -5,7 +5,7 @@ import "/src/styles/Profile.css";
 import "/src/styles/DashboardMenu.css";
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL; 
+const API_URL = import.meta.env.VITE_API_URL; // DEBE ser: https://backend-mi-marketplace.onrender.com
 
 function Profile() {
   const { user, updateUserProfile, logout } = useContext(AuthContext);
@@ -71,9 +71,9 @@ function Profile() {
         },
       };
 
-      // ✅ API con variable de entorno
+      // API con variable de entorno (CORRECTO)
       const updateTextRes = await axios.put(
-        `${API_URL}/editar-perfil`,
+        `${API_URL}/api/editar-perfil`,
         {
           id: user.id,
           name,
@@ -89,8 +89,9 @@ function Profile() {
         const formData = new FormData();
         formData.append("profileImage", selectedFile);
 
+        // ✅ CORREGIDO: Añadido '/api'
         const uploadRes = await axios.post(
-          `${API_URL}/upload-profile`,
+          `${API_URL}/api/upload-profile`,
           formData,
           {
             headers: {
@@ -105,16 +106,17 @@ function Profile() {
           profile_image: uploadRes.data.imagePath,
         };
       } else {
+        // ✅ CORREGIDO: Usar consistentemente user.profile_image
         updatedUser = {
           ...updatedUser,
-          profile_image: user.profileImage || user.profile_image,
+          profile_image: user.profile_image,
         };
       }
 
-      updateUserProfile(updatedUser);
+      updateUserProfile(updatedUser); // Actualiza el contexto de autenticación con el usuario modificado
       setSuccessMessage("¡Perfil actualizado exitosamente!");
       setIsEditing(false);
-      setPreviewUrl(null);
+      setPreviewUrl(null); // Limpiar preview y selectedFile después de guardar
       setSelectedFile(null);
     } catch (err) {
       console.error("Error actualizando perfil:", err);
@@ -123,7 +125,7 @@ function Profile() {
           "Hubo un error al actualizar el perfil. Inténtalo de nuevo."
       );
       if (err.response && err.response.status === 401) {
-        logout();
+        logout(); // Cerrar sesión si el token no es válido
       }
     } finally {
       setLoading(false);
@@ -131,16 +133,16 @@ function Profile() {
   };
 
   const getProfileImageUrl = () => {
-  if (previewUrl) return previewUrl;
+    if (previewUrl) return previewUrl; // Si hay una nueva imagen seleccionada para previsualizar
 
-  if (user?.profileImage?.startsWith("/uploads")) {
-    //  Devuelve la ruta absoluta basada en el backend (sin /api)
-    const backendBase = API_URL.replace("/api", ""); 
-    return `${backendBase}${user.profileImage}`;
-  }
+    // ✅ CORREGIDO: Concatenación directa de API_URL y user.profile_image
+    // Asume que user.profile_image contiene la ruta como "/uploads/..." o "/assets/..."
+    if (user?.profile_image) {
+      return `${API_URL}${user.profile_image}`;
+    }
 
-  return "/assets/perfil.jpg";
-};
+    return "/assets/perfil.jpg"; // Imagen por defecto si no hay ninguna
+  };
 
   if (loading && !user)
     return <div className="profile-container-perfil">Cargando perfil...</div>;

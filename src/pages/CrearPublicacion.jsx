@@ -75,7 +75,7 @@ function CrearPublicacion() {
       const formData = new FormData();
       formData.append('imagen', imagen);
 
-      const uploadRes = await axios.post(`${API_URL}/upload`, formData, {
+      const uploadRes = await axios.post(`${API_URL}/api/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
@@ -93,7 +93,7 @@ function CrearPublicacion() {
         vendedor_id: user.id
       };
 
-      await axios.post(`${API_URL}/crear-publicacion`, newProductData);
+      await axios.post(`${API_URL}/api/crear-publicacion`, newProductData);
 
       alert('Producto publicado con éxito!');
       navigate('/productos');

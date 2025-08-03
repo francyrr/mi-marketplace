@@ -4,7 +4,7 @@ import axios from "axios";
 import "/src/styles/EditarPublicacion.css";
 import { AuthContext } from "../context/AuthContext";
 
-const API_URL = import.meta.env.VITE_API_URL; // ✅ Variable de entorno para la API
+const API_URL = import.meta.env.VITE_API_URL; 
 
 function EditarPublicacion() {
   const { id } = useParams();
@@ -35,7 +35,7 @@ function EditarPublicacion() {
         };
 
         // ✅ Usar API_URL para obtener producto
-        const response = await axios.get(`${API_URL}/productos/${id}`, config);
+        const response = await axios.get(`${API_URL}/api/productos/${id}`, config);
 
         setProducto({
           ...response.data,
@@ -114,7 +114,7 @@ function EditarPublicacion() {
       };
 
       // ✅ Usar API_URL para actualizar publicación
-      await axios.put(`${API_URL}/actualizar-publicacion/${id}`, {
+      await axios.put(`${API_URL}/api/actualizar-publicacion/${id}`, {
         nombre: producto.nombre,
         descripcion: producto.descripcion,
         precio: producto.precio,

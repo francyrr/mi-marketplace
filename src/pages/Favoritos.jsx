@@ -3,9 +3,9 @@ import axios from 'axios';
 import ProductoCard from '../components/ProductoCard';
 import '/src/styles/Productos.css';
 import { AuthContext } from '../context/AuthContext';
-import DashboardMenu from '../components/DashboardMenu'; // ✅ Importado el menú lateral
+import DashboardMenu from '../components/DashboardMenu'; 
 
-const API_URL = import.meta.env.VITE_API_URL; // ✅ URL del backend desde variable de entorno
+const API_URL = import.meta.env.VITE_API_URL; 
 
 function MisFavoritos() {
   const { user } = useContext(AuthContext);
@@ -18,8 +18,8 @@ function MisFavoritos() {
     const fetchMisFavoritos = async () => {
       setLoading(true);
       try {
-        // ✅ Cambiado a API_URL
-        const response = await axios.get(`${API_URL}/mis-favoritos`, {
+        //   API_URL
+        const response = await axios.get(`${API_URL}/api/mis-favoritos`, {
           params: { user_id: user.id }
         });
         setMisFavoritos(response.data);

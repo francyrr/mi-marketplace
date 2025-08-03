@@ -19,7 +19,7 @@ function MisPublicaciones() {
       try {
         //  Uso de API_URL
         const response = await axios.get(
-          `${API_URL}/mis-publicaciones?usuario_id=${user.id}`
+          `${API_URL}/api/mis-publicaciones?usuario_id=${user.id}`
         );
         setMisProductos(response.data);
       } catch (error) {

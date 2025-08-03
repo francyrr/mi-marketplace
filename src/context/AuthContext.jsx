@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const AuthContext = createContext();
 console.log("API_URL:", import.meta.env.VITE_API_URL);
-const API_URL = import.meta.env.VITE_API_URL; // ✅ URL del backend desde variable de entorno
+const API_URL = import.meta.env.VITE_API_URL;
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -29,17 +29,17 @@ export function AuthProvider({ children }) {
     return normalized;
   };
 
-  // ✅ Cargar datos iniciales (usuario + favoritos)
+  //  Cargar datos iniciales (usuario + favoritos)
   useEffect(() => {
     const loadInitialData = async () => {
       const storedToken = localStorage.getItem('token');
       if (storedToken) {
         setAuthToken(storedToken);
         try {
-          const res = await axios.get(`${API_URL}/profile`);
+          const res = await axios.get(`${API_URL}/api/profile`);
           setUser(normalizeUser(res.data.usuario));
 
-          const resFavoritos = await axios.get(`${API_URL}/mis-favoritos`);
+          const resFavoritos = await axios.get(`${API_URL}/api/mis-favoritos`);
           setFavoritos(resFavoritos.data);
         } catch (error) {
           console.error("Error al cargar usuario o favoritos:", error);
@@ -52,12 +52,12 @@ export function AuthProvider({ children }) {
     loadInitialData();
   }, []);
 
-  // ✅ Sincronizar favoritos al cambiar el usuario
+  //  Sincronizar favoritos al cambiar el usuario
   useEffect(() => {
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
       axios
-        .get(`${API_URL}/mis-favoritos`)
+        .get(`${API_URL}/api/mis-favoritos`)
         .then((res) => {
           setFavoritos(res.data);
         })
@@ -73,10 +73,10 @@ export function AuthProvider({ children }) {
     }
   }, [user]);
 
-  // ✅ Login
+  //  Login
   const login = async (email, password) => {
     try {
-      const res = await axios.post(`${API_URL}/login`, { email, password });
+      const res = await axios.post(`${API_URL}/api/login`, { email, password });
       const { token, usuario } = res.data;
       setAuthToken(token);
       setUser(normalizeUser(usuario));
@@ -87,10 +87,10 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // ✅ Registro
+  //  Registro
   const register = async ({ name, email, phone, password }) => {
     try {
-      const res = await axios.post(`${API_URL}/registro`, { name, email, phone, password });
+      const res = await axios.post(`${API_URL}/api/registro`, { name, email, phone, password });
       const { token, usuario } = res.data;
       setAuthToken(token);
       setUser(normalizeUser(usuario));
@@ -101,7 +101,7 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // ✅ Logout
+  //  Logout
   const logout = () => {
     setUser(null);
     setFavoritos([]);
@@ -109,13 +109,13 @@ export function AuthProvider({ children }) {
     setAuthToken(null);
   };
 
-  // ✅ Añadir favorito
+  //  Añadir favorito
   const addFavorito = async (producto) => {
     if (!user) throw new Error('Debes iniciar sesión para agregar favoritos.');
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No token found.');
-      await axios.post(`${API_URL}/favoritos`, { product_id: producto.id });
+      await axios.post(`${API_URL}/api/favoritos`, { product_id: producto.id });
       setFavoritos((prev) => (prev.some((p) => p.id === producto.id) ? prev : [...prev, producto]));
     } catch (err) {
       console.error("Error al añadir favorito:", err);
@@ -123,13 +123,13 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // ✅ Eliminar favorito
+  //  Eliminar favorito
   const removeFavorito = async (productoId) => {
     if (!user) throw new Error('Debes iniciar sesión para eliminar favoritos.');
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No token found.');
-      await axios.delete(`${API_URL}/favoritos/${productoId}`);
+      await axios.delete(`${API_URL}/api/favoritos/${productoId}`);
       setFavoritos((prev) => prev.filter((p) => p.id !== productoId));
     } catch (err) {
       console.error("Error al eliminar favorito:", err);
@@ -137,7 +137,7 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // ✅ Actualizar perfil en contexto
+  //  Actualizar perfil en contexto
   const updateUserProfile = (updatedUserData) => {
     setUser(normalizeUser(updatedUserData));
   };
