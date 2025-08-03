@@ -28,7 +28,7 @@ function Navbar() {
     <nav className='navbar'>
       <div className='logo'>
         <Link to="/">
-          <img src="/src/assets/logo.png" alt="Logo" />
+          <img src="/public/assets/logo.png" alt="Logo" />
         </Link>
       </div>
 

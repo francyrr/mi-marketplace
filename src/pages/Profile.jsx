@@ -134,7 +134,7 @@ function Profile() {
       return `http://localhost:5000${user.profileImage}`;
     }
 
-    return "/src/assets/perfil.jpg";
+    return "/public/assets/perfil.jpg";
   };
 
   if (loading && !user)
