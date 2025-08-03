@@ -3,6 +3,8 @@ import { AuthContext } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import "/src/styles/Navbar.css";
 
+const API_URL = import.meta.env.VITE_API_URL; // ✅ Usar la variable de entorno
+
 function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -17,10 +19,13 @@ function Navbar() {
     setMenuOpen(!menuOpen);
   };
 
+  // ✅ Construcción dinámica de la URL de imagen de perfil
   const getProfileImageUrl = () => {
     if (user?.profileImage?.startsWith('/uploads')) {
-      return `http://localhost:5000${user.profileImage}`;
+      // Remover "/api" de la URL de backend si existe
+      return `${API_URL.replace('/api', '')}${user.profileImage}`;
     }
+    // Si no hay imagen subida, usar UI Avatars como fallback
     return user?.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "U")}`;
   };
 
@@ -28,7 +33,8 @@ function Navbar() {
     <nav className='navbar'>
       <div className='logo'>
         <Link to="/">
-          <img src="/public/assets/logo.png" alt="Logo" />
+          {/* ✅ El logo debe ir como "/assets/logo.png" (en public), no "/public/assets" */}
+          <img src="/assets/logo.png" alt="Logo" />
         </Link>
       </div>
 

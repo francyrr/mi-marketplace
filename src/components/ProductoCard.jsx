@@ -4,6 +4,8 @@ import '/src/styles/ProductoCard.css';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL; // ✅ Usar variable de entorno para API
+
 function ProductoCard({ producto }) {
   const navigate = useNavigate();
   const { user, favoritos, addFavorito, removeFavorito } = useContext(AuthContext);
@@ -21,12 +23,14 @@ function ProductoCard({ producto }) {
 
     try {
       if (favoritos.some(fav => fav.id === producto.id)) {
-        await axios.delete(`http://localhost:5000/api/favoritos/${producto.id}`, {
+        // ✅ DELETE usando API_URL
+        await axios.delete(`${API_URL}/favoritos/${producto.id}`, {
           data: { user_id: user.id }
         });
         removeFavorito(producto.id);
       } else {
-        await axios.post("http://localhost:5000/api/favoritos", {
+        // ✅ POST usando API_URL
+        await axios.post(`${API_URL}/favoritos`, {
           user_id: user.id,
           product_id: producto.id
         });
@@ -38,9 +42,10 @@ function ProductoCard({ producto }) {
     }
   };
 
+  // ✅ Construcción dinámica de la URL de la imagen
   const imageUrl = producto.imagen?.startsWith('/uploads')
-    ? `http://localhost:5000${producto.imagen}`
-    : producto.imagen || '/default-placeholder.jpg';
+    ? `${API_URL.replace('/api', '')}${producto.imagen}`
+    : producto.imagen || '/assets/default-placeholder.jpg'; // ✅ Imagen por defecto en /public/assets
 
   const isFavorito = favoritos.some(fav => fav.id === producto.id);
 

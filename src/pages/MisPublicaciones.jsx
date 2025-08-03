@@ -4,6 +4,8 @@ import { AuthContext } from '../context/AuthContext';
 import ProductoCard from '../components/ProductoCard.jsx'; 
 import '/src/styles/Productos.css'; 
 
+const API_URL = import.meta.env.VITE_API_URL; // ✅ Variable de entorno para el backend
+
 function MisPublicaciones() {
   const { user } = useContext(AuthContext);
   const [misProductos, setMisProductos] = useState([]);
@@ -14,8 +16,9 @@ function MisPublicaciones() {
       if (!user) return; 
       setLoading(true);
       try {
+        // ✅ Uso de API_URL
         const response = await axios.get(
-          `http://localhost:5000/api/mis-publicaciones?usuario_id=${user.id}`
+          `${API_URL}/mis-publicaciones?usuario_id=${user.id}`
         );
         setMisProductos(response.data);
       } catch (error) {

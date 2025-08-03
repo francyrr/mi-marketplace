@@ -4,10 +4,12 @@ import axios from "axios";
 import "/src/styles/EditarPublicacion.css";
 import { AuthContext } from "../context/AuthContext";
 
+const API_URL = import.meta.env.VITE_API_URL; // ✅ Variable de entorno para la API
+
 function EditarPublicacion() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext); 
+  const { user } = useContext(AuthContext);
 
   const [producto, setProducto] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,25 +31,23 @@ function EditarPublicacion() {
         }
 
         const config = {
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
+          headers: { Authorization: `Bearer ${token}` },
         };
-    
-        const response = await axios.get(`http://localhost:5000/api/productos/${id}`, config);
+
+        // ✅ Usar API_URL para obtener producto
+        const response = await axios.get(`${API_URL}/productos/${id}`, config);
 
         setProducto({
           ...response.data,
           precio: Number(response.data.precio),
-          lat: response.data.lat ? Number(response.data.lat) : '', 
+          lat: response.data.lat ? Number(response.data.lat) : '',
           lng: response.data.lng ? Number(response.data.lng) : '',
         });
 
         if (user && Number(user.id) !== Number(response.data.vendedor_id)) {
           setError("No tienes permiso para editar esta publicación.");
-          setProducto(null); 
+          setProducto(null);
           setLoading(false);
-          
           return;
         }
 
@@ -58,8 +58,7 @@ function EditarPublicacion() {
         } else if (err.response && err.response.status === 401) {
           setError("Sesión expirada o no válida. Por favor, inicia sesión.");
           navigate('/login');
-        }
-        else {
+        } else {
           setError("Error al cargar el producto para edición.");
         }
       } finally {
@@ -67,14 +66,13 @@ function EditarPublicacion() {
       }
     };
 
-    if (user) { 
+    if (user) {
       fetchProducto();
     } else {
       setLoading(false);
       setError("Necesitas iniciar sesión para editar publicaciones.");
       navigate('/login');
     }
-
   }, [id, user, navigate]);
 
   const handleChange = (e) => {
@@ -95,14 +93,13 @@ function EditarPublicacion() {
       return;
     }
     if (isNaN(producto.precio) || producto.precio <= 0) {
-        setMensajeError('El precio debe ser un número positivo.');
-        return;
+      setMensajeError('El precio debe ser un número positivo.');
+      return;
     }
     if ((producto.lat && isNaN(producto.lat)) || (producto.lng && isNaN(producto.lng))) {
-        setMensajeError('Las coordenadas de latitud y longitud deben ser números válidos.');
-        return;
+      setMensajeError('Las coordenadas de latitud y longitud deben ser números válidos.');
+      return;
     }
-
 
     try {
       const token = localStorage.getItem('token');
@@ -113,26 +110,25 @@ function EditarPublicacion() {
       }
 
       const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       };
 
-      await axios.put(`http://localhost:5000/api/actualizar-publicacion/${id}`, {
+      // ✅ Usar API_URL para actualizar publicación
+      await axios.put(`${API_URL}/actualizar-publicacion/${id}`, {
         nombre: producto.nombre,
         descripcion: producto.descripcion,
         precio: producto.precio,
         categoria: producto.categoria,
         ubicacion: producto.ubicacion,
         imagen: producto.imagen,
-        lat: producto.lat || null, 
-        lng: producto.lng || null, 
+        lat: producto.lat || null,
+        lng: producto.lng || null,
       }, config);
 
       setMensajeExito("Publicación actualizada con éxito. Redirigiendo...");
       setTimeout(() => {
-        navigate(`/producto/${id}`); 
-      }, 1500); 
+        navigate(`/producto/${id}`);
+      }, 1500);
     } catch (err) {
       console.error("Error al actualizar publicación:", err);
       setMensajeError(`No se pudo actualizar: ${err.response?.data?.error || err.message}`);
@@ -177,8 +173,8 @@ function EditarPublicacion() {
           onChange={handleChange}
           placeholder="Precio"
           required
-          min="0" 
-          step="0.01" 
+          min="0"
+          step="0.01"
         />
 
         <label htmlFor="categoria">Categoría:</label>

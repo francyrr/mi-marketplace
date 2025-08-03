@@ -4,6 +4,8 @@ import { AuthContext } from '../context/AuthContext';
 import '/src/styles/CrearPublicacion.css';
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL; // ✅ Usar variable de entorno
+
 function CrearPublicacion() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -68,17 +70,18 @@ function CrearPublicacion() {
     }
 
     try {
-   
+      // ✅ Subir imagen al backend usando API_URL
       const formData = new FormData();
       formData.append('imagen', imagen);
 
-      const uploadRes = await axios.post('http://localhost:5000/api/upload', formData, {
+      const uploadRes = await axios.post(`${API_URL}/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       const filename = uploadRes.data.filename;
       const imagePath = `/uploads/${filename}`;
 
+      // ✅ Crear producto con datos y URL de imagen
       const newProductData = {
         nombre,
         descripcion,
@@ -89,11 +92,10 @@ function CrearPublicacion() {
         vendedor_id: user.id
       };
 
-      await axios.post('http://localhost:5000/api/crear-publicacion', newProductData);
+      await axios.post(`${API_URL}/crear-publicacion`, newProductData);
 
       alert('Producto publicado con éxito!');
       navigate('/productos');
-
     } catch (error) {
       console.error("Error al crear publicación:", error);
       alert('Hubo un error al publicar tu producto.');

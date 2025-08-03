@@ -4,6 +4,7 @@ import ProductoCard from '../components/ProductoCard';
 import '/src/styles/Productos.css';
 import { AuthContext } from '../context/AuthContext';
 
+const API_URL = import.meta.env.VITE_API_URL; // ✅ URL del backend desde variable de entorno
 
 function MisFavoritos() {
   const { user } = useContext(AuthContext);
@@ -16,7 +17,8 @@ function MisFavoritos() {
     const fetchMisFavoritos = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/api/mis-favoritos', {
+        // ✅ Cambiado a API_URL
+        const response = await axios.get(`${API_URL}/mis-favoritos`, {
           params: { user_id: user.id }
         });
         setMisFavoritos(response.data);

@@ -5,6 +5,8 @@ import "/src/styles/Profile.css";
 import "/src/styles/DashboardMenu.css";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL; 
+
 function Profile() {
   const { user, updateUserProfile, logout } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
@@ -69,8 +71,9 @@ function Profile() {
         },
       };
 
+      // ✅ API con variable de entorno
       const updateTextRes = await axios.put(
-        "http://localhost:5000/api/editar-perfil",
+        `${API_URL}/editar-perfil`,
         {
           id: user.id,
           name,
@@ -87,7 +90,7 @@ function Profile() {
         formData.append("profileImage", selectedFile);
 
         const uploadRes = await axios.post(
-          "http://localhost:5000/api/upload-profile",
+          `${API_URL}/upload-profile`,
           formData,
           {
             headers: {
@@ -131,10 +134,11 @@ function Profile() {
     if (previewUrl) return previewUrl;
 
     if (user?.profileImage?.startsWith("/uploads")) {
-      return `http://localhost:5000${user.profileImage}`;
+      // ✅ Construir URL con el backend en producción
+      return `${API_URL.replace("/api", "")}${user.profileImage}`;
     }
 
-    return "/public/assets/perfil.jpg";
+    return "/assets/perfil.jpg"; // ✅ En public/assets
   };
 
   if (loading && !user)
@@ -153,7 +157,6 @@ function Profile() {
       </div>
       <div className="profile-content">
         <h1>Bienvenido</h1>
-        {/* Contenido principal de la página de perfil */}
         <div className="user-info">
           <img
             src={getProfileImageUrl()}

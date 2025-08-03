@@ -6,6 +6,7 @@ import genericMapImage from "/assets/img/mapa.jpg";
 import axios from "axios";
 
 const DEFAULT_MAP_IMAGE = genericMapImage;
+const API_URL = import.meta.env.VITE_API_URL; // ✅ URL base de la API desde variable de entorno
 
 function ProductoDetalle() {
   const { id } = useParams();
@@ -20,7 +21,8 @@ function ProductoDetalle() {
     const fetchProducto = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/productos/${id}`);
+        // ✅ Uso de API_URL para la petición
+        const response = await axios.get(`${API_URL}/productos/${id}`);
         setProducto(response.data);
       } catch (err) {
         console.error("Error fetching product:", err);
@@ -54,7 +56,8 @@ function ProductoDetalle() {
   const handleDelete = async () => {
     if (confirm("¿Seguro que deseas eliminar esta publicación?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/eliminar-publicacion/${producto.id}`);
+        // ✅ Uso de API_URL para eliminar publicación
+        await axios.delete(`${API_URL}/eliminar-publicacion/${producto.id}`);
         alert("Publicación eliminada.");
         navigate("/mis-publicaciones");
       } catch (err) {
@@ -85,9 +88,11 @@ function ProductoDetalle() {
     producto.coordenadas?.lng,
     producto.ubicacion
   );
+
+  // ✅ Ajustar URL de la imagen para producción/desarrollo
   const imageUrl = producto.imagen?.startsWith("/uploads")
-    ? `http://localhost:5000${producto.imagen}`
-    : producto.imagen || "/default-placeholder.jpg";
+    ? `${API_URL.replace("/api", "")}${producto.imagen}`
+    : producto.imagen || "/assets/default-placeholder.jpg";
 
   return (
     <div className="product-detail-container">
@@ -106,7 +111,7 @@ function ProductoDetalle() {
             {producto?.telefono_vendedor &&
               Number(user?.id) !== Number(producto.vendedor_id) && (
                 <button className="btn-whatsapp" onClick={handleWhatsAppClick}>
-                  Contactar al Vendedor por WhatsApp <i class="fa fa-whatsapp"></i>
+                  Contactar al Vendedor por WhatsApp <i className="fa fa-whatsapp"></i>
                 </button>
               )}
             {Number(user?.id) === Number(producto.vendedor_id) && (
