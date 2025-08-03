@@ -6,6 +6,10 @@ import routes from './routes.js';
 
 const app = express();
 
+//carpeta "public" para imágenes estáticas
+const staticPath = path.resolve('public');
+app.use('/public', express.static(staticPath));
+
 // Crear directorios de uploads si no existen
 const uploadsDir = path.resolve('uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -24,7 +28,7 @@ app.use('/uploads/profiles', express.static(profilesUploadsDir));
 // CORS dinámico: frontend en producción y localhost en desarrollo
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? 'https://frontend-mi-marketplace.onrender.com'  
+    ? 'https://frontend-mi-marketplace.onrender.com'
     : 'http://localhost:5173',
   credentials: true
 }));
@@ -33,7 +37,7 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Rutas API
+// ✅ Rutas API
 app.use('/', routes);
 
 // Middleware de errores
