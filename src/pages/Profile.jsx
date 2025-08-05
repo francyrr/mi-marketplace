@@ -5,7 +5,7 @@ import "/src/styles/Profile.css";
 import "/src/styles/DashboardMenu.css";
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL; // DEBE ser: https://backend-mi-marketplace.onrender.com
+const API_URL = import.meta.env.VITE_API_URL; 
 
 function Profile() {
   const { user, updateUserProfile, logout } = useContext(AuthContext);
@@ -89,7 +89,7 @@ function Profile() {
         const formData = new FormData();
         formData.append("profileImage", selectedFile);
 
-        // ✅ CORREGIDO: Añadido '/api'
+        
         const uploadRes = await axios.post(
           `${API_URL}/api/upload-profile`,
           formData,
@@ -106,7 +106,7 @@ function Profile() {
           profile_image: uploadRes.data.imagePath,
         };
       } else {
-        // ✅ CORREGIDO: Usar consistentemente user.profile_image
+        
         updatedUser = {
           ...updatedUser,
           profile_image: user.profile_image,
@@ -133,15 +133,15 @@ function Profile() {
   };
 
   const getProfileImageUrl = () => {
-    if (previewUrl) return previewUrl; // Si hay una nueva imagen seleccionada para previsualizar
+    if (previewUrl) return previewUrl; 
 
-    // ✅ CORREGIDO: Concatenación directa de API_URL y user.profile_image
-    // Asume que user.profile_image contiene la ruta como "/uploads/..." o "/assets/..."
+    // Concatenación directa de API_URL y user.profile_image
+    
     if (user?.profile_image) {
       return `${API_URL}${user.profile_image}`;
     }
 
-    return "/assets/perfil.jpg"; // Imagen por defecto si no hay ninguna
+    return "/assets/perfil.jpg"; 
   };
 
   if (loading && !user)

@@ -157,23 +157,28 @@ display: inline-block;
 /* Para móviles (responsivo) */
 @media (max-width: 768px) {
   .profile-container-perfil {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     gap: 20px; 
     padding: 10px;
+    margin-right: 0;
+    
   }
 
   .dashboard-layout {
     width: 100%; 
+    height: auto;
   }
+  
+  
 
-  .profile-content {
-    width: 100%; 
+  .profile-content-perfil {
+    width: 570%; 
     text-align: center;
   }
 
-  .profile-content h1 {
-    font-size: 35px;
+  .profile-content-perfil h1 {
+    font-size: 25px;
   }
 
   .profile-avatar {
