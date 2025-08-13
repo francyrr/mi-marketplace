@@ -6,6 +6,7 @@ import { registerUser, loginUser, updateProfile, getMisPublicaciones } from './c
 import { protect } from './middleware/authMiddleware.js';
 
 const router = express.Router();
+
 const profileStorage = multer.diskStorage({
     destination: "./uploads/profiles",
     filename: (req, file, cb) => {
@@ -14,10 +15,8 @@ const profileStorage = multer.diskStorage({
 });
 const uploadProfile = multer({ storage: profileStorage });
 
-// Ruta para subir foto de perfil
 router.post("/upload-profile", uploadProfile.single("profileImage"), protect, async (req, res) => {
     const imagePath = `/uploads/profiles/${req.file.filename}`;
-
     try {
         await pool.query(
             `UPDATE "user" SET profile_image = $1 WHERE id = $2`,
@@ -30,7 +29,6 @@ router.post("/upload-profile", uploadProfile.single("profileImage"), protect, as
     }
 });
 
-// --- Configuración de Multer para imágenes de PRODUCTOS ---
 const productStorage = multer.diskStorage({
     destination: "./uploads",
     filename: (req, file, cb) => {
@@ -39,7 +37,6 @@ const productStorage = multer.diskStorage({
 });
 const uploadProduct = multer({ storage: productStorage });
 
-// Ruta para subir imágenes de productos
 router.post('/upload', uploadProduct.single('imagen'), protect, (req, res) => {
     if (req.file) {
         res.json({ filename: req.file.filename });
@@ -54,11 +51,8 @@ router.put('/editar-perfil', protect, updateProfile);
 router.get('/profile', protect, (req, res) => {
     res.json({ usuario: { ...req.user, id: req.user.id } });
 });
+router.get('/mis-publicaciones', protect, getMisPublicaciones);
 
-router.get('/mis-publicaciones', protect, getMisPublicaciones); 
-
-// --- Rutas para PRODUCTOS ---
-// Obtener todos los productos
 router.get('/productos', async (req, res) => {
     try {
         const result = await pool.query(
@@ -72,7 +66,6 @@ router.get('/productos', async (req, res) => {
     }
 });
 
-// Obtener un producto por ID con datos del vendedor
 router.get('/productos/:id', protect, async (req, res) => {
     const { id } = req.params;
     try {
@@ -99,7 +92,6 @@ router.get('/productos/:id', protect, async (req, res) => {
                WHERE p.id = $1`,
             [id]
         );
-
         if (result.rows.length === 0) {
             return res.status(404).json({ error: "Producto no encontrado." });
         }
@@ -110,11 +102,9 @@ router.get('/productos/:id', protect, async (req, res) => {
     }
 });
 
-
-// Ruta para crear una nueva publicación (producto)
 router.post('/crear-publicacion', protect, async (req, res) => {
     const { nombre, descripcion, precio, imagen, categoria, ubicacion, lat, lng } = req.body;
-    const vendedor_id = req.user.id; 
+    const vendedor_id = req.user.id;
     try {
         const result = await pool.query(
             `INSERT INTO product (nombre, descripcion, precio, imagen, categoria, ubicacion, vendedor_id, lat, lng)
@@ -128,24 +118,18 @@ router.post('/crear-publicacion', protect, async (req, res) => {
     }
 });
 
-// Ruta para actualizar una publicación existente
 router.put('/actualizar-publicacion/:id', protect, async (req, res) => {
     const { id } = req.params;
     const { nombre, descripcion, precio, imagen, categoria, ubicacion, lat, lng } = req.body;
-    const user_id = req.user.id; // El ID del usuario que intenta actualizar
-
+    const user_id = req.user.id;
     try {
-        // Verificar que el producto existe y que el usuario es el vendedor
         const productResult = await pool.query(`SELECT vendedor_id FROM product WHERE id = $1`, [id]);
-
         if (productResult.rows.length === 0) {
             return res.status(404).json({ error: "Publicación no encontrada." });
         }
-
         if (productResult.rows[0].vendedor_id !== user_id) {
             return res.status(403).json({ error: "No tienes permiso para actualizar esta publicación." });
         }
-
         const updateResult = await pool.query(
             `UPDATE product
              SET nombre = $1, descripcion = $2, precio = $3, imagen = $4, categoria = $5, ubicacion = $6, lat = $7, lng = $8
@@ -153,7 +137,6 @@ router.put('/actualizar-publicacion/:id', protect, async (req, res) => {
              RETURNING *`,
             [nombre, descripcion, precio, imagen, categoria, ubicacion, lat, lng, id]
         );
-
         res.json(updateResult.rows[0]);
     } catch (error) {
         console.error("Error al actualizar publicación:", error);
@@ -161,24 +144,17 @@ router.put('/actualizar-publicacion/:id', protect, async (req, res) => {
     }
 });
 
-
-// Ruta para eliminar una publicación
 router.delete('/eliminar-publicacion/:id', protect, async (req, res) => {
     const { id } = req.params;
-    const user_id = req.user.id; // El ID del usuario que intenta eliminar
-
+    const user_id = req.user.id;
     try {
-        // Verificar que el producto existe y que el usuario es el vendedor
         const productResult = await pool.query(`SELECT vendedor_id FROM product WHERE id = $1`, [id]);
-
         if (productResult.rows.length === 0) {
             return res.status(404).json({ error: "Publicación no encontrada." });
         }
-
         if (productResult.rows[0].vendedor_id !== user_id) {
             return res.status(403).json({ error: "No tienes permiso para eliminar esta publicación." });
         }
-
         await pool.query(`DELETE FROM product WHERE id = $1`, [id]);
         res.json({ mensaje: "Publicación eliminada exitosamente." });
     } catch (error) {
@@ -187,8 +163,6 @@ router.delete('/eliminar-publicacion/:id', protect, async (req, res) => {
     }
 });
 
-// --- Rutas de Favoritos ---
-// Añadir un producto a favoritos
 router.post('/favoritos', protect, async (req, res) => {
     const { product_id } = req.body;
     const user_id = req.user.id;
@@ -205,7 +179,6 @@ router.post('/favoritos', protect, async (req, res) => {
     }
 });
 
-// Eliminar un producto de favoritos
 router.delete('/favoritos/:product_id', protect, async (req, res) => {
     const { product_id } = req.params;
     const user_id = req.user.id;
@@ -221,7 +194,6 @@ router.delete('/favoritos/:product_id', protect, async (req, res) => {
     }
 });
 
-// Obtener la lista de favoritos del usuario
 router.get('/mis-favoritos', protect, async (req, res) => {
     const user_id = req.user.id;
     try {
