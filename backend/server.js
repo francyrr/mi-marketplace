@@ -5,11 +5,25 @@ import fs from 'fs';
 import routes from './routes.js';
 
 const app = express();
-const __dirname = path.resolve();
 
-// Middlewares para parsear el body de las peticiones
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+//carpeta "public" para imágenes estáticas
+const staticPath = path.resolve('public');
+app.use('/public', express.static(staticPath));
+
+// Crear directorios de uploads si no existen
+const uploadsDir = path.resolve('uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+
+const profilesUploadsDir = path.resolve('uploads/profiles');
+if (!fs.existsSync(profilesUploadsDir)) {
+  fs.mkdirSync(profilesUploadsDir, { recursive: true });
+}
+
+// Servir archivos estáticos de uploads
+app.use('/uploads', express.static(uploadsDir));
+app.use('/uploads/profiles', express.static(profilesUploadsDir));
 
 // CORS dinámico: frontend en producción y localhost en desarrollo
 app.use(cors({
@@ -19,34 +33,29 @@ app.use(cors({
   credentials: true
 }));
 
-// Crear directorios de uploads si no existen
-const uploadsDir = path.resolve('uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
+// Middlewares
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-const profilesUploadsDir = path.resolve('uploads/profiles');
-if (!fs.existsSync(profilesUploadsDir)) {
-  fs.mkdirSync(profilesUploadsDir, { recursive: true });
-}
-
-// Servir archivos estáticos de los directorios de uploads
-app.use('/uploads', express.static(uploadsDir));
-app.use('/uploads/profiles', express.static(profilesUploadsDir));
-
-// Rutas de la API 
+//  Rutas API
 app.use('/api', routes);
 
-// Configuración para Producción (servir frontend estático)
+app.use('/api', routes);
+
+// Sirve el index.html para todas las demás rutas
 if (process.env.NODE_ENV === 'production') {
-  // Sirve los archivos estáticos de la carpeta 'dist' del frontend
+  const __dirname = path.resolve();
   app.use(express.static(path.join(__dirname, 'dist')));
 
-  // Middleware de catch-all para servir el index.html
   app.get(/(.*)/, (req, res) => {
     res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
   });
 }
+// Middleware de errores
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('¡Algo salió mal en el servidor!');
+});
 
 // Middleware de errores
 app.use((err, req, res, next) => {
