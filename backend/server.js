@@ -44,7 +44,7 @@ app.use('/uploads/profiles', express.static(profilesUploadsDir));
 
 // --- Rutas de la API ---
 
-app.use('/api', routes);
+// app.use('/api', routes);
 
 
 // --- Configuración para Producción (servir frontend estático) ---
