@@ -5,8 +5,9 @@ import fs from 'fs';
 import routes from './routes.js';
 
 const app = express();
+const __dirname = path.resolve();
 
-//carpeta "public" para imágenes estáticas
+// carpeta "public" para imágenes estáticas
 const staticPath = path.resolve('public');
 app.use('/public', express.static(staticPath));
 
@@ -37,30 +38,19 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-//  Rutas API
-app.use('/api', routes);
-// ... (resto de tu código de server.js)
-
-// Tus rutas de API (DEBEN ir ANTES del catch-all)
 app.use('/api', routes);
 
-// Este es el middleware de catch-all para el frontend
-// Sirve el index.html para todas las demás rutas
+// Configuración para Producción (servir frontend estático)
 if (process.env.NODE_ENV === 'production') {
-  const __dirname = path.resolve();
+  // Servir los archivos estáticos de la carpeta 'dist' del frontend
   app.use(express.static(path.join(__dirname, 'dist')));
 
-  app.get('*', (req, res) => {
+  // Middleware de catch-all para servir el index.html
+  
+  app.get(/(.*)/, (req, res) => {
     res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
   });
 }
-// Middleware de errores
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('¡Algo salió mal en el servidor!');
-});
-
-// ... (resto de tu código de server.js)
 
 // Middleware de errores
 app.use((err, req, res, next) => {
