@@ -7,24 +7,9 @@ import routes from './routes.js';
 const app = express();
 const __dirname = path.resolve();
 
-// carpeta "public" para imágenes estáticas
-const staticPath = path.resolve('public');
-app.use('/public', express.static(staticPath));
-
-// Crear directorios de uploads si no existen
-const uploadsDir = path.resolve('uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-}
-
-const profilesUploadsDir = path.resolve('uploads/profiles');
-if (!fs.existsSync(profilesUploadsDir)) {
-  fs.mkdirSync(profilesUploadsDir, { recursive: true });
-}
-
-// Servir archivos estáticos de uploads
-app.use('/uploads', express.static(uploadsDir));
-app.use('/uploads/profiles', express.static(profilesUploadsDir));
+// Middlewares para parsear el body de las peticiones
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // CORS dinámico: frontend en producción y localhost en desarrollo
 app.use(cors({
@@ -34,19 +19,30 @@ app.use(cors({
   credentials: true
 }));
 
-// Middlewares
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Crear directorios de uploads si no existen
+const uploadsDir = path.resolve('uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
+const profilesUploadsDir = path.resolve('uploads/profiles');
+if (!fs.existsSync(profilesUploadsDir)) {
+  fs.mkdirSync(profilesUploadsDir, { recursive: true });
+}
+
+// Servir archivos estáticos de los directorios de uploads
+app.use('/uploads', express.static(uploadsDir));
+app.use('/uploads/profiles', express.static(profilesUploadsDir));
+
+// Rutas de la API 
 app.use('/api', routes);
 
 // Configuración para Producción (servir frontend estático)
 if (process.env.NODE_ENV === 'production') {
-  // Servir los archivos estáticos de la carpeta 'dist' del frontend
+  // Sirve los archivos estáticos de la carpeta 'dist' del frontend
   app.use(express.static(path.join(__dirname, 'dist')));
 
   // Middleware de catch-all para servir el index.html
-  
   app.get(/(.*)/, (req, res) => {
     res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
   });
